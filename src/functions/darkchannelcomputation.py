@@ -23,4 +23,6 @@ def darkchannelcomputation(I : np.ndarray, patch_size : int) -> np.ndarray:
 
 
 
-darkchannelcomputation(datasets.face(), 15)
+if __name__ == "__main__":
+    img = plt.imread("data/raw_images/view-metro-city-buildings-cityscape.jpg")
+    darkchannelcomputation(img,50)
