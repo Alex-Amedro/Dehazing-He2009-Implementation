@@ -19,7 +19,7 @@ def atmoslight(dark_channel : np.ndarray, I : np.ndarray) -> np.ndarray:
 
     nb_valides = round(nb_valides)
 
-    print(nb_valides)
+    #print(nb_valides)
 
     valides = indices_tries[:nb_valides]
 
@@ -32,7 +32,7 @@ def atmoslight(dark_channel : np.ndarray, I : np.ndarray) -> np.ndarray:
 
     # a finir
 
-    print(np.shape(coordonnees))
+    #print(np.shape(coordonnees))
 
     pixels_candidats = I[coordonnees[:,0], coordonnees[:,1]]
 
@@ -40,18 +40,18 @@ def atmoslight(dark_channel : np.ndarray, I : np.ndarray) -> np.ndarray:
 
     idx_max = np.argmax(valeurs)
 
-    print(coordonnees[idx_max,0], coordonnees[idx_max,1])
+    #print(coordonnees[idx_max,0], coordonnees[idx_max,1])
 
-    fig = plt.figure()
-    original = fig.add_subplot(1, 2, 1)
-    original.imshow(I)
-    original.set_title("Image originale")
+    # fig = plt.figure()
+    # original = fig.add_subplot(1, 2, 1)
+    # original.imshow(I)
+    # original.set_title("Image originale")
     
-    dark = fig.add_subplot(1, 2, 2)
-    dark.imshow(I)
-    dark.plot(coordonnees[idx_max,1], coordonnees[idx_max,0], 'ro', markersize=20, fillstyle='none', markeredgewidth=2)
-    dark.set_title("Lumière atmosphérique")
-    plt.show()
+    # dark = fig.add_subplot(1, 2, 2)
+    # dark.imshow(I)
+    # dark.plot(coordonnees[idx_max,1], coordonnees[idx_max,0], 'ro', markersize=20, fillstyle='none', markeredgewidth=2)
+    # dark.set_title("Lumière atmosphérique")
+    # plt.show()
 
     return pixels_candidats[idx_max]
 

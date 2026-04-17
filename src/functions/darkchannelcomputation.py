@@ -11,7 +11,9 @@ def darkchannelcomputation(I : np.ndarray, patch_size : int) -> np.ndarray:
     # I_padded = np.pad(I_min_canaux,patch_size%2, 'constant', constant_values=255)
 
     dark_channel = ndimage.minimum_filter(I_min_canaux,patch_size)
+    
 
+    
     # fig = plt.figure()
     # original = fig.add_subplot(1, 2, 1)
     # original.imshow(I)
