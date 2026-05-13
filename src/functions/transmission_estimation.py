@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import argparse
 import os
 
 from darkchannelcomputation import darkchannelcomputation as dcp
@@ -38,11 +39,16 @@ def transmission_estimation(I : np.ndarray, patch_size : int, omega=0.95, img_na
 
 
 if __name__ == "__main__":
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    img_path = os.path.join(current_dir, "../../data/raw_images/image1.jpg")
+    parser = argparse.ArgumentParser(description="Estimation de la transmission.")
+    parser.add_argument("image", type=str, help="Chemin vers l'image d'entrée")
+    parser.add_argument("--patch-size", type=int, default=20, help="Taille du patch pour le dark channel (défaut: 20)")
+    parser.add_argument("--omega", type=float, default=0.95, help="Coefficient omega pour l'estimation de transmission (défaut: 0.95)")
+    args = parser.parse_args()
+
+    img_path = os.path.abspath(args.image)
     img_name = get_img_name(img_path)
     img = plt.imread(img_path)
-    transminsion, A = transmission_estimation(img, 50, img_name=img_name)
+    transminsion, A = transmission_estimation(img, args.patch_size, omega=args.omega, img_name=img_name)
     fig = plt.figure()
     original = fig.add_subplot(1, 2, 1)
     original.imshow(img)

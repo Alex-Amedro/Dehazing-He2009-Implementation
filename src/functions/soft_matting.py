@@ -1,12 +1,13 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import scipy as sp
+import argparse
 import os
 from transmission_estimation import transmission_estimation as te
 from tqdm import tqdm
 from cache_utils import load_cache, save_cache, get_img_name
 
-def soft_matting(I : np.ndarray, t_tild : np.ndarray, img_name : str = None) -> np.ndarray:
+def soft_matting(I : np.ndarray, t_tild : np.ndarray, img_name : str = None, lambda_e : float = 0.0001) -> np.ndarray:
 
     # Si un nom d'image est fourni, vérifier le cache
     if img_name is not None:
@@ -18,7 +19,6 @@ def soft_matting(I : np.ndarray, t_tild : np.ndarray, img_name : str = None) -> 
     taille_fenetre = 3
     norm_w = taille_fenetre*taille_fenetre
     e = 0.0001
-    lambda_e = 0.0001
     U_3 = np.identity(3)
 
     # Vectorisation
@@ -92,12 +92,18 @@ def soft_matting(I : np.ndarray, t_tild : np.ndarray, img_name : str = None) -> 
     return t
 
 if __name__ == "__main__":
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    img_path = os.path.join(current_dir, "../../data/raw_images/image2.jpeg")
+    parser = argparse.ArgumentParser(description="Soft matting de la transmission.")
+    parser.add_argument("image", type=str, help="Chemin vers l'image d'entrée")
+    parser.add_argument("--patch-size", type=int, default=20, help="Taille du patch pour le dark channel (défaut: 20)")
+    parser.add_argument("--omega", type=float, default=0.95, help="Coefficient omega pour l'estimation de transmission (défaut: 0.95)")
+    parser.add_argument("--lambda-e", type=float, default=0.0001, help="Paramètre de régularisation lambda (défaut: 0.0001)")
+    args = parser.parse_args()
+
+    img_path = os.path.abspath(args.image)
     img_name = get_img_name(img_path)
     img = plt.imread(img_path)
-    transmission_bloc, _ = te(img, 50, img_name=img_name)
-    transmission = soft_matting(img, transmission_bloc, img_name)
+    transmission_bloc, _ = te(img, args.patch_size, omega=args.omega, img_name=img_name)
+    transmission = soft_matting(img, transmission_bloc, img_name, lambda_e=args.lambda_e)
     fig = plt.figure()
     original = fig.add_subplot(1, 3, 1)
     original.imshow(img)

@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import argparse
 import os
 
 from scipy import ndimage, datasets
@@ -38,11 +39,15 @@ def darkchannelcomputation(I : np.ndarray, patch_size : int, img_name : str = No
 
 
 if __name__ == "__main__":
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    img_path = os.path.join(current_dir, "../../data/raw_images/image1.jpg")
+    parser = argparse.ArgumentParser(description="Calcul du dark channel d'une image.")
+    parser.add_argument("image", type=str, help="Chemin vers l'image d'entrée")
+    parser.add_argument("--patch-size", type=int, default=20, help="Taille du patch pour le dark channel (défaut: 20)")
+    args = parser.parse_args()
+
+    img_path = os.path.abspath(args.image)
     img_name = get_img_name(img_path)
     img = plt.imread(img_path)
-    dark = darkchannelcomputation(img, 50, img_name)
+    dark = darkchannelcomputation(img, args.patch_size, img_name)
     fig = plt.figure()
     original = fig.add_subplot(1, 2, 1)
     original.imshow(img)

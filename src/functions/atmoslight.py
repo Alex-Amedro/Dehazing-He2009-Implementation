@@ -1,6 +1,7 @@
 import numpy as np
 import math
 import matplotlib.pyplot as plt
+import argparse
 import os
 import darkchannelcomputation
 from scipy import ndimage, datasets
@@ -70,8 +71,12 @@ def atmoslight(dark_channel : np.ndarray, I : np.ndarray, img_name : str = None)
     return result
 
 if __name__ == "__main__":
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    img_path = os.path.join(current_dir, "../../data/raw_images/image1.jpg")
+    parser = argparse.ArgumentParser(description="Estimation de la lumière atmosphérique.")
+    parser.add_argument("image", type=str, help="Chemin vers l'image d'entrée")
+    parser.add_argument("--patch-size", type=int, default=20, help="Taille du patch pour le dark channel (défaut: 20)")
+    args = parser.parse_args()
+
+    img_path = os.path.abspath(args.image)
     img_name = get_img_name(img_path)
     img = plt.imread(img_path)
-    atmoslight(darkchannelcomputation.darkchannelcomputation(img, 50, img_name), img, img_name)
+    atmoslight(darkchannelcomputation.darkchannelcomputation(img, args.patch_size, img_name), img, img_name)
