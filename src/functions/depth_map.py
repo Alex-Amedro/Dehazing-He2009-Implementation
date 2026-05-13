@@ -10,8 +10,10 @@ def depth_map(I):
 
     t_tild, A = te(I, 50)
 
-    if os.path.exists('/tmp/transmission_soft_matting.npy'):
-        t = np.load('/tmp/transmission_soft_matting.npy')
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    data_path = os.path.abspath(os.path.join(current_dir, '../../data/files/transmission_soft_matting.npy'))
+    if os.path.exists(data_path):
+        t = np.load(data_path)
     else:
         t = sm(I, t_tild)
 

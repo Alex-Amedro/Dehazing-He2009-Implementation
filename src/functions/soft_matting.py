@@ -77,7 +77,10 @@ def soft_matting(I : np.ndarray, t_tild : np.ndarray ) -> np.ndarray:
     t_flat, _ = sp.sparse.linalg.cg(A, b)
     t = t_flat.reshape(H, W)
 
-    np.save('/tmp/transmission_soft_matting.npy', t)
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    data_path = os.path.abspath(os.path.join(current_dir, '../../data/files/transmission_soft_matting.npy'))
+    os.makedirs(os.path.dirname(data_path), exist_ok=True)
+    np.save(data_path, t)
     return t
 
 if __name__ == "__main__":

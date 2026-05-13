@@ -56,5 +56,5 @@ def atmoslight(dark_channel : np.ndarray, I : np.ndarray) -> np.ndarray:
     return pixels_candidats[idx_max]
 
 if __name__ == "__main__":
-    img = plt.imread("data/raw_images/image1.jpg")
+    img = plt.imread("../../data/raw_images/image1.jpg")
     atmoslight(darkchannelcomputation.darkchannelcomputation(img, 50), img)
