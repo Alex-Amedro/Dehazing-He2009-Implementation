@@ -81,6 +81,7 @@ def soft_matting(I : np.ndarray, t_tild : np.ndarray ) -> np.ndarray:
     t_flat, _ = sp.sparse.linalg.cg(A, b)
     t = t_flat.reshape(H, W)
 
+    np.save('/tmp/transmission_soft_matting.npy', t)
     return t
 
 if __name__ == "__main__":
@@ -90,11 +91,11 @@ if __name__ == "__main__":
     transmission_bloc= te(img, 50)
     transmission = soft_matting(img,transmission_bloc)
     fig = plt.figure()
-    original = fig.add_subplot(1, 2, 1)
+    original = fig.add_subplot(1, 3, 1)
     original.imshow(img)
-    trs_tild = fig.add_subplot(1, 2, 2)
+    trs_tild = fig.add_subplot(1, 3, 2)
     trs_tild.imshow(transmission_bloc, cmap='gray')
-    trs = fig.add_subplot(1, 2, 3)
+    trs = fig.add_subplot(1, 3, 3)
     trs.imshow(transmission, cmap='gray')
     plt.show()
     

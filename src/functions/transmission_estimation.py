@@ -20,7 +20,7 @@ def transmission_estimation(I : np.ndarray, patch_size : int, omega=0.95) -> np.
     I_filtree = dcp(I_normee,patch_size)
 
     
-    return np.ones(shape=np.shape(I_filtree)) - omega * I_filtree
+    return np.ones(shape=np.shape(I_filtree)) - omega * I_filtree, A 
 
 
 if __name__ == "__main__":
