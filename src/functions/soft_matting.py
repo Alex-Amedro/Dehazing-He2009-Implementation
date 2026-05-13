@@ -4,8 +4,16 @@ import scipy as sp
 import os
 from transmission_estimation import transmission_estimation as te
 from tqdm import tqdm
+from cache_utils import load_cache, save_cache, get_img_name
 
-def soft_matting(I : np.ndarray, t_tild : np.ndarray ) -> np.ndarray:
+def soft_matting(I : np.ndarray, t_tild : np.ndarray, img_name : str = None) -> np.ndarray:
+
+    # Si un nom d'image est fourni, vérifier le cache
+    if img_name is not None:
+        cached = load_cache(img_name, 'soft_matting')
+        if cached is not None:
+            return cached
+
     # para
     taille_fenetre = 3
     norm_w = taille_fenetre*taille_fenetre
@@ -40,7 +48,7 @@ def soft_matting(I : np.ndarray, t_tild : np.ndarray ) -> np.ndarray:
             cov_k = np.cov(voinisage_flat, rowvar=False, ddof=0)
             B = np.linalg.inv(cov_k+(e/9)*(U_3))
 
-            # parcours de couple dans la fenetres
+            # parcours de couple dans la fenetres
             for l in range(9):
                 for k in range(9):
                     kron = 0
@@ -77,18 +85,19 @@ def soft_matting(I : np.ndarray, t_tild : np.ndarray ) -> np.ndarray:
     t_flat, _ = sp.sparse.linalg.cg(A, b)
     t = t_flat.reshape(H, W)
 
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    data_path = os.path.abspath(os.path.join(current_dir, '../../data/files/transmission_soft_matting.npy'))
-    os.makedirs(os.path.dirname(data_path), exist_ok=True)
-    np.save(data_path, t)
+    # Sauvegarder dans le cache
+    if img_name is not None:
+        save_cache(img_name, 'soft_matting', t)
+
     return t
 
 if __name__ == "__main__":
     current_dir = os.path.dirname(os.path.abspath(__file__))
     img_path = os.path.join(current_dir, "../../data/raw_images/image2.jpeg")
+    img_name = get_img_name(img_path)
     img = plt.imread(img_path)
-    transmission_bloc, _ = te(img, 50)
-    transmission = soft_matting(img,transmission_bloc)
+    transmission_bloc, _ = te(img, 50, img_name=img_name)
+    transmission = soft_matting(img, transmission_bloc, img_name)
     fig = plt.figure()
     original = fig.add_subplot(1, 3, 1)
     original.imshow(img)
@@ -97,4 +106,3 @@ if __name__ == "__main__":
     trs = fig.add_subplot(1, 3, 3)
     trs.imshow(transmission, cmap='gray')
     plt.show()
-    

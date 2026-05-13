@@ -1,11 +1,19 @@
 import numpy as np
 import math
 import matplotlib.pyplot as plt
+import os
 import darkchannelcomputation
 from scipy import ndimage, datasets
+from cache_utils import load_cache, save_cache, get_img_name
 
 
-def atmoslight(dark_channel : np.ndarray, I : np.ndarray) -> np.ndarray:
+def atmoslight(dark_channel : np.ndarray, I : np.ndarray, img_name : str = None) -> np.ndarray:
+
+    # Si un nom d'image est fourni, vérifier le cache
+    if img_name is not None:
+        cached = load_cache(img_name, 'atmoslight')
+        if cached is not None:
+            return cached
 
     I_copie = I.copy()
 
@@ -53,8 +61,17 @@ def atmoslight(dark_channel : np.ndarray, I : np.ndarray) -> np.ndarray:
     # dark.set_title("Lumière atmosphérique")
     # plt.show()
 
-    return pixels_candidats[idx_max]
+    result = pixels_candidats[idx_max]
+
+    # Sauvegarder dans le cache
+    if img_name is not None:
+        save_cache(img_name, 'atmoslight', result)
+
+    return result
 
 if __name__ == "__main__":
-    img = plt.imread("../../data/raw_images/image1.jpg")
-    atmoslight(darkchannelcomputation.darkchannelcomputation(img, 50), img)
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    img_path = os.path.join(current_dir, "../../data/raw_images/image1.jpg")
+    img_name = get_img_name(img_path)
+    img = plt.imread(img_path)
+    atmoslight(darkchannelcomputation.darkchannelcomputation(img, 50, img_name), img, img_name)
