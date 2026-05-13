@@ -26,5 +26,11 @@ def darkchannelcomputation(I : np.ndarray, patch_size : int) -> np.ndarray:
 
 
 if __name__ == "__main__":
-    img = plt.imread("data/raw_images/view-metro-city-buildings-cityscape.jpg")
-    darkchannelcomputation(img,50)
+    img = plt.imread("../../data/raw_images/image1.jpg")
+    dark = darkchannelcomputation(img,50)
+    fig = plt.figure()
+    original = fig.add_subplot(1, 2, 1)
+    original.imshow(img)
+    dark_plot = fig.add_subplot(1, 2, 2)
+    dark_plot.imshow(dark, cmap='gray')
+    plt.show()

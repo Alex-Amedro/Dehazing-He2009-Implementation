@@ -25,7 +25,7 @@ def transmission_estimation(I : np.ndarray, patch_size : int, omega=0.95) -> np.
 
 if __name__ == "__main__":
     img = plt.imread("../../data/raw_images/image1.jpg")
-    transminsion = transmission_estimation(img, 50)
+    transminsion, A = transmission_estimation(img, 50)
     fig = plt.figure()
     original = fig.add_subplot(1, 2, 1)
     original.imshow(img)
