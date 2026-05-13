@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import scipy as sp
 import os
 from transmission_estimation import transmission_estimation as te
+from tqdm import tqdm
 
 def soft_matting(I : np.ndarray, t_tild : np.ndarray ) -> np.ndarray:
     # para
@@ -30,13 +31,8 @@ def soft_matting(I : np.ndarray, t_tild : np.ndarray ) -> np.ndarray:
 
     # parcours pixels
     total_pixels = (H-3) * (W-3)
-    current_pixel = 0
-    for i in range(1,H-2) :
-        for j in range(1,W-2) :
-            current_pixel += 1
-            if current_pixel % max(1, total_pixels // 20) == 0:  # Afficher tous les 5%
-                progress = (current_pixel / total_pixels) * 100
-                print(f"Progression: {progress:.1f}%")
+    for i in tqdm(range(1, H-2), desc="Soft matting"):
+        for j in range(1, W-2):
             voisinage = I[i:i+taille_fenetre,j:j+taille_fenetre,:]
             moyenne_int = np.mean(voisinage, axis=0)
             moyenne_k = np.mean(moyenne_int, axis = 0)
@@ -88,7 +84,7 @@ if __name__ == "__main__":
     current_dir = os.path.dirname(os.path.abspath(__file__))
     img_path = os.path.join(current_dir, "../../data/raw_images/image2.jpeg")
     img = plt.imread(img_path)
-    transmission_bloc= te(img, 50)
+    transmission_bloc, _ = te(img, 50)
     transmission = soft_matting(img,transmission_bloc)
     fig = plt.figure()
     original = fig.add_subplot(1, 3, 1)
