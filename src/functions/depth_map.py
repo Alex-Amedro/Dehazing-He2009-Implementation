@@ -49,7 +49,7 @@ if __name__ == "__main__":
     
     reconstructed = fig.add_subplot(1, 2, 2)
     reconstructed.imshow(reconstructed_image)
-    reconstructed.set_title("Sans brume")
+    reconstructed.set_title("Depth Map")
     reconstructed.axis('off')
     
     plt.show()
